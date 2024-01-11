@@ -1,14 +1,23 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/auth";
 import { useForm } from "react-hook-form";
+import Loader from "../../components/loader/Loader";
 
 const Login = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
 
   const {
     register,
@@ -31,6 +40,8 @@ const Login = () => {
     }
     mutate(data);
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4  bg-black/85 rounded-md w-1/4">

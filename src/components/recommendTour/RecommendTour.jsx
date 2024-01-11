@@ -1,43 +1,7 @@
 import TourCard from "../card/TourCard";
-import img from "../../assets/img/mount.webp";
 import PropTypes from "prop-types";
 
-const RecommendTour = ({ Icon, title }) => {
-  const tours = [
-    {
-      id: 1,
-      imageUrl: img,
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      id: 2,
-      imageUrl: img,
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      id: 3,
-      imageUrl: img,
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-  ];
+const RecommendTour = ({ Icon, title, tours }) => {
   return (
     <div className="max-w-7xl">
       {/* Title */}
@@ -45,7 +9,7 @@ const RecommendTour = ({ Icon, title }) => {
         <Icon color="teal" />
         {title}
       </h1>
-      <div className="flex  mx-auto justify-between gap-8 my-7">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 grid-cols-1 mx-auto justify-between gap-8 my-7">
         {tours?.map((tour) => (
           <TourCard key={tour.id} tour={tour} />
         ))}
@@ -56,7 +20,7 @@ const RecommendTour = ({ Icon, title }) => {
 
 RecommendTour.propTypes = {
   title: PropTypes.string.isRequired,
-
+  tours: PropTypes.array.isRequired,
   Icon: PropTypes.any.isRequired,
 };
 

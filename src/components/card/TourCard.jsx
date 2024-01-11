@@ -1,7 +1,7 @@
 import { Badge, Box, Image } from "@chakra-ui/react";
-import { StarIcon } from "lucide-react";
+import { IndianRupee, StarIcon } from "lucide-react";
 import PropTypes from "prop-types";
-
+import img from "../../assets/img/mount.webp";
 function TourCard({ tour }) {
   return (
     <Box
@@ -11,7 +11,7 @@ function TourCard({ tour }) {
       overflow="hidden"
       className="cursor-pointer hover:scale-105 duration-300 ease-out"
     >
-      <Image src={tour?.imageUrl} alt={tour?.imageAlt} />
+      <Image src={img} alt="img" />
       <Box p="6">
         <Box display="flex" alignItems="baseline">
           <Badge borderRadius="full" px="2" colorScheme="teal">
@@ -25,7 +25,7 @@ function TourCard({ tour }) {
             textTransform="uppercase"
             ml="2"
           >
-            {tour?.beds} beds &bull; {tour?.baths} baths
+            Duration {tour?.duration}d &bull; Difficult {tour?.difficulty}
           </Box>
         </Box>
 
@@ -36,11 +36,12 @@ function TourCard({ tour }) {
           lineHeight="tight"
           noOfLines={1}
         >
-          {tour?.title}
+          {tour?.name}
         </Box>
 
-        <Box>
-          {tour?.formattedPrice}
+        <Box className="flex items-center ">
+          <IndianRupee size={16} color="green" />
+          {tour?.price}
           <Box as="span" color="gray.600" fontSize="sm">
             / wk
           </Box>
@@ -50,10 +51,13 @@ function TourCard({ tour }) {
           {Array(5)
             .fill("")
             .map((_, i) => (
-              <StarIcon key={i} color={i < tour?.rating ? "teal" : "gray"} />
+              <StarIcon
+                key={i}
+                color={i + 1 < tour?.ratingsAverage ? "teal" : "gray"}
+              />
             ))}
           <Box as="span" ml="2" color="gray.600" fontSize="sm">
-            {tour?.reviewCount} reviews
+            {tour?.ratingsQuantity} reviews
           </Box>
         </Box>
       </Box>

@@ -5,22 +5,32 @@ import { login } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
 import Loader from "../components/loader/Loader";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 
 function ProtectedRoute({ children }) {
   const dispatch = useDispatch();
   const location = useLocation();
   const token = localStorage.getItem("token");
 
-  const { isLoading } = useQuery("me", getMe, {
-    retry: 2,
+  const { isLoading, refetch } = useQuery("me", getMe, {
+    retry: false,
+    enabled: false,
     onSuccess: (data) => {
       dispatch(login(data));
+      <Navigate to="/" />;
     },
     onError: () => {
       console.error("An error occurred while fetching user data.");
-      <Navigate to="/login" />;
     },
   });
+
+  useEffect(() => {
+    if (!token) {
+      <Navigate to="/login" />;
+    } else {
+      refetch();
+    }
+  }, [token]);
 
   if (isLoading) {
     return <Loader />;
