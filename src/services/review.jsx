@@ -1,6 +1,7 @@
 import AxiosService from "./AxiosService";
 
-export const createReview = async (tourId, data) => {
+export const createReview = async ({ tourId, data }) => {
+  console.log(data);
   const response = await AxiosService.post(
     `api/v1/tour/${tourId}/reviews`,
     data

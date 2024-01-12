@@ -15,10 +15,12 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LoginRegisterModal from "./loginRegisterModal/LoginRegisterModal";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   //
   //
+  const navigate = useNavigate();
   const [navColor, setNavColor] = useState(false);
   const user = useSelector((state) => state.user.user);
 
@@ -82,10 +84,17 @@ const Navbar = () => {
       </Modal>
 
       <div className="flex max-w-7xl mx-auto justify-between items-center px-4 sm:px-6 md:px-2 lg:px-0 h-[80px]">
-        <h1 className="italic font-bold text-2xl">Tripo</h1>
+        <Link to="/">
+          <h1 className="italic font-bold text-2xl">Tripo</h1>
+        </Link>
 
         <ul className="md:flex hidden gap-x-8 items-center">
-          <li className="hover:text-teal-400 cursor-pointer">Home</li>
+          <li
+            className="hover:text-teal-400 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            Home
+          </li>
           <li className="hover:text-teal-400 cursor-pointer">Popular Tours</li>
           <li className="hover:text-teal-400 cursor-pointer">About Us</li>
         </ul>

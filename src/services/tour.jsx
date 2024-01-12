@@ -15,7 +15,7 @@ export const getTours = async () => {
   return response.data;
 };
 
-export const getTour = async (id) => {
+export const getTour = async ({ id }) => {
   const response = await AxiosService.get(`api/v1/tour/${id}`);
   return response.data;
 };

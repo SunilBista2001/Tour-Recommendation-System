@@ -3,17 +3,34 @@ import Modal from "../modal/index";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import PropTypes from "prop-types";
+import { useMutation, useQueryClient } from "react-query";
+import { createReview } from "../../services/review";
 
-const CreateReviewModal = ({ isOpen, onClose }) => {
+const CreateReviewModal = ({ isOpen, onClose, tourId }) => {
+  const queryClient = useQueryClient();
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+
+  const { mutate, isLoading } = useMutation(createReview, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("tour");
+      setRating(0);
+      setReview("");
+      onClose();
+    },
+  });
 
   const handleStarClick = (value) => {
     setRating(value);
   };
 
   const handleSubmit = () => {
-    console.log(rating, review);
+    const data = {
+      rating,
+      review,
+    };
+
+    mutate({ tourId, data });
   };
 
   return (
@@ -45,6 +62,7 @@ const CreateReviewModal = ({ isOpen, onClose }) => {
 
         <ButtonGroup size="sm" className="flex justify-end">
           <Button
+            isLoading={isLoading}
             loadingText="Submitting..."
             rounded={"full"}
             className="w-full "
