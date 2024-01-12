@@ -1,47 +1,30 @@
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import SlideShow from "../../components/slideShow/SlideShow";
-import { SearchIcon, ShieldPlus, StarIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import RecommendTour from "../../components/recommendTour/RecommendTour";
 import { useQuery } from "react-query";
 import Loader from "../../components/loader/Loader";
-import { getTourByCollaborativeAlgorithm, getTours } from "../../services/tour";
+import { getTours } from "../../services/tour";
 import { useState } from "react";
+import SlideShow from "../../components/slideShow/SlideShow";
 
 const Home = () => {
   const [tours, setTours] = useState([]);
 
-  // Run this query when the recommendTours don't have enough data
-  const { refetch, isLoading: isToursLoading } = useQuery("tours", getTours, {
-    enabled: false,
+  const { isLoading: isToursLoading } = useQuery("tours", getTours, {
     retry: false,
     onSuccess: (data) => {
       setTours(data.data.tours);
     },
   });
 
-  // Get Recommend Tours
-  const { isLoading: isRecommendLoading } = useQuery(
-    "recommendTours",
-    getTourByCollaborativeAlgorithm,
-    {
-      onSuccess: (data) => {
-        if (data.data.recommendation.length > 2) {
-          setTours(data.data.recommendation);
-        }
-        data.data.recommendation.length < 2 && refetch();
-      },
-      retry: false,
-    }
-  );
-
-  if (isRecommendLoading || isToursLoading) return <Loader />;
+  if (isToursLoading) return <Loader />;
 
   return (
-    <div className="w-full flex justify-center flex-col">
+    <div className="w-full flex justify-center flex-col bg-gray-50">
       <SlideShow />
 
       {/* Search */}
-      <div className="mx-10 mt-4 flex justify-center">
+      <div className="mx-10 mt-4 flex justify-center ">
         <div className="w-1/2">
           <InputGroup size="md">
             <Input
@@ -57,17 +40,13 @@ const Home = () => {
       </div>
 
       {/* Most Popular */}
-      <div className="w-full justify-center flex my-4">
-        <RecommendTour title={"Most Popular"} Icon={StarIcon} tours={tours} />
+      <div className="w-full justify-center flex my-4 ">
+        <RecommendTour title={"Recommended for you"} tours={tours} />
       </div>
 
       {/* Recent Added Tours */}
-      <div className="w-full justify-center flex my-4">
-        <RecommendTour
-          title={"Recently Added Tour"}
-          Icon={ShieldPlus}
-          tours={tours}
-        />
+      <div className="w-full justify-center flex my-4 bg-white">
+        <RecommendTour title={"Top Destinations"} tours={tours} />
       </div>
     </div>
   );

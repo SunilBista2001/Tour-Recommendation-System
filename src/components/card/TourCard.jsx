@@ -9,9 +9,14 @@ function TourCard({ tour }) {
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      className="cursor-pointer hover:scale-105 duration-300 ease-out"
+      className="cursor-pointer "
+      backgroundColor={"white"}
     >
-      <Image src={img} alt="img" />
+      <Image
+        src={img}
+        alt="img"
+        className="hover:scale-105 object-cover duration-500 ease-out"
+      />
       <Box p="6">
         <Box display="flex" alignItems="baseline">
           <Badge borderRadius="full" px="2" colorScheme="teal">
@@ -54,6 +59,7 @@ function TourCard({ tour }) {
               <StarIcon
                 key={i}
                 color={i + 1 < tour?.ratingsAverage ? "teal" : "gray"}
+                fill={i + 1 < tour?.ratingsAverage ? "teal" : "gray"}
               />
             ))}
           <Box as="span" ml="2" color="gray.600" fontSize="sm">

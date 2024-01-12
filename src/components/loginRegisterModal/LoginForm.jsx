@@ -1,23 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useMutation } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../services/auth";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import Loader from "../../components/loader/Loader";
+import PropTypes from "prop-types";
+import { useMutation } from "react-query";
+import { loginUser } from "../../services/auth";
 
-const Login = () => {
-  const navigate = useNavigate();
+const LoginForm = ({ handleFormType, onClose }) => {
   const [show, setShow] = useState(false);
-
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
-  }, [token]);
 
   const {
     register,
@@ -27,29 +17,19 @@ const Login = () => {
 
   const { mutate, isLoading } = useMutation(loginUser, {
     onSuccess: () => {
-      navigate("/");
-    },
-    onError: (err) => {
-      console.error(err);
+      window.location.reload();
+      onClose();
     },
   });
 
   const onsubmit = (data) => {
-    if (localStorage.getItem("token")) {
-      localStorage.removeItem("token");
-    }
     mutate(data);
   };
 
-  if (isLoading) return <Loader />;
-
   return (
-    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4  bg-black/85 rounded-md w-1/4">
-      <h2 className="text-white text-lg text-center ">
-        Login To <span className="text-cyan-500 font-medium">Tripo</span>
-      </h2>
+    <>
       <form
-        className="text-white space-y-3 px-4 py-2"
+        className="text-black space-y-4 px-4 py-2"
         onSubmit={handleSubmit(onsubmit)}
       >
         <Input
@@ -67,7 +47,7 @@ const Login = () => {
             errorBorderColor="red"
             pr="4.5rem"
             type={show ? "text" : "password"}
-            placeholder="Enter password"
+            placeholder="Password"
             {...register("password", { required: true })}
           />
 
@@ -87,20 +67,31 @@ const Login = () => {
           loadingText="Login..."
           colorScheme="teal"
           variant="outline"
-          className="w-full"
+          rounded={"full"}
+          className="w-full "
         >
           Login
         </Button>
       </form>
+
       <hr className="my-2" />
-      <div className="text-white text-center ">
+      <div className="text-gray-500 font-medium text-center ">
         Don't have an account?
-        <Link to="/register" className="text-cyan-500 ml-1 font-normal">
+        <p
+          className="text-cyan-500 ml-1 font-medium cursor-pointer"
+          onClick={() => handleFormType("register")}
+        >
           Sign up
-        </Link>
+        </p>
       </div>
-    </div>
+    </>
   );
 };
 
-export default Login;
+LoginForm.propTypes = {
+  isLoading: PropTypes.bool,
+  handleFormType: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+export default LoginForm;

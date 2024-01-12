@@ -1,37 +1,25 @@
-import { Slide } from "react-slideshow-image";
-import "react-slideshow-image/dist/styles.css";
-import BG1 from "../../assets/img/mount.webp";
-import BG2 from "../../assets/img/mountain.jpg";
+import CinematicVideo from "../../../assets/vid/cinematic.mp4";
 import "./slideShow.css";
-
-const images = [
-  {
-    src: BG1,
-    name: "slide1",
-  },
-  {
-    src: BG2,
-    name: "slide2",
-  },
-];
 
 const SlideShow = () => {
   return (
-    <Slide
-      arrows={false}
-      autoplay
-      duration={2000}
-      indicators
-      transitionDuration={600}
-    >
-      {images.map((img, idx) => (
-        <div key={idx} className="each-slide-effect">
-          <div style={{ backgroundImage: `url(${img.src})` }}>
-            <span>{img.name}</span>
-          </div>
-        </div>
-      ))}
-    </Slide>
+    <div className="relative">
+      <video
+        autoPlay
+        loop
+        muted
+        controls={false}
+        className="w-full h-screen object-cover brightness-50"
+      >
+        <source src={CinematicVideo} type="video/mp4" />
+      </video>
+      <div className="flex flex-col gap-2 text-white absolute top-1/2  w-full text-center">
+        <h1 className="text-6xl tracking-wide font-bold ">
+          Tours and Trek Packages in Nepal
+        </h1>
+        <p className="text-xl">Choose your next adventure in Nepal with us.</p>
+      </div>
+    </div>
   );
 };
 
