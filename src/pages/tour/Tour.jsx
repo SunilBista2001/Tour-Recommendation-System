@@ -12,12 +12,14 @@ import {
 import { useParams } from "react-router-dom";
 import BannerImg from "../../assets/img/mount.webp";
 import {
+  Edit,
   Gauge,
   IndianRupeeIcon,
   LanguagesIcon,
   MapPin,
   Star,
   TimerIcon,
+  Trash,
   UsersRound,
 } from "lucide-react";
 import PropTypes from "prop-types";
@@ -26,6 +28,8 @@ import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { getTour } from "../../services/tour";
 import Loader from "../../components/loader/Loader";
+import { useState } from "react";
+import DeleteModal from "../../components/modal/DeleteModal";
 
 const Divider = () => {
   return <hr className="border-gray-200 my-5" />;
@@ -47,7 +51,15 @@ const Tour = () => {
   const { tourId } = useParams();
   const user = useSelector((state) => state.user.user);
 
+  const [editReviews, setEditReviews] = useState(null);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    isOpen: isDeleteModalOpen,
+    onOpen: onOpenDeleteModal,
+    onClose: onCloseDeleteModal,
+  } = useDisclosure();
 
   console.log("user", user);
 
@@ -59,8 +71,23 @@ const Tour = () => {
 
   return (
     <>
-      {/* Review Modal */}
-      <CreateReviewModal isOpen={isOpen} onClose={onClose} tourId={tourId} />
+      {/* Delete Review Modal */}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={onCloseDeleteModal}
+        cancelRef={null}
+        title={"Review"}
+        id={editReviews}
+        content={"Are you sure you want to delete this review?"}
+      />
+
+      {/* Create and Update Review Modal */}
+      <CreateReviewModal
+        isOpen={isOpen}
+        onClose={onClose}
+        tourId={tourId}
+        reviews={editReviews}
+      />
 
       {/* Tour's Title */}
       <div className=" mt-36 max-w-7xl mx-auto space-y-2">
@@ -204,29 +231,60 @@ const Tour = () => {
         {tour?.data?.tour?.reviews?.length !== 0 ? (
           tour?.data?.tour?.reviews?.map((review, i) => (
             <div
-              key={review?.id}
+              key={i}
               className={`w-full flex flex-col my-8 space-y-8 mx-auto  px-8 ${
                 (i + 1) % 2 !== 0 ? "bg-gray-50" : " bg-white "
               }`}
             >
-              <div className="flex gap-x-4 my-2  ">
-                <Avatar name={review?.user?.username} src={""} />
-                <div className="space-y-0">
-                  <p className="font-medium">{review?.user?.username}</p>
-                  <p className="flex">
-                    {Array(5)
-                      .fill("")
-                      .map((_, i) => (
-                        <Star
-                          key={i}
-                          size={20}
-                          color={i + 1 <= review?.rating ? "teal" : "gray"}
-                          fill={i + 1 <= review?.rating ? "teal" : "none"}
-                        />
-                      ))}
-                  </p>
-                  <p>{review?.review}</p>
+              <div className="flex gap-x-4 my-2 justify-between  ">
+                <div className="flex gap-x-4">
+                  <Avatar name={review?.user?.username} src={""} />
+
+                  <div className="space-y-0">
+                    <div className="min-w-full flex justify-between ">
+                      <p className="font-medium mr-1">
+                        {review?.user?.username}
+                      </p>
+                    </div>
+                    <p className="flex">
+                      {Array(5)
+                        .fill("")
+                        .map((_, i) => (
+                          <Star
+                            key={i}
+                            size={20}
+                            color={i + 1 <= review?.rating ? "teal" : "gray"}
+                            fill={i + 1 <= review?.rating ? "teal" : "none"}
+                          />
+                        ))}
+                    </p>
+                    <p>{review?.review}</p>
+                  </div>
                 </div>
+
+                {/* Show the Delete and Update Icon only if the respective user is logged in */}
+                {user?.data?.user?.id === review?.user?.id && (
+                  <div className="flex items-center gap-x-3">
+                    <Edit
+                      size={20}
+                      className="text-gray-400 cursor-pointer"
+                      color="teal"
+                      onClick={() => {
+                        setEditReviews(review);
+                        onOpen();
+                      }}
+                    />
+                    <Trash
+                      size={20}
+                      className="text-gray-400 cursor-pointer"
+                      color="red"
+                      onClick={() => {
+                        setEditReviews(review?._id);
+                        onOpenDeleteModal();
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))

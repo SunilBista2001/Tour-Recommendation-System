@@ -1,21 +1,40 @@
-import { Button, ButtonGroup, Textarea } from "@chakra-ui/react";
+import { Button, ButtonGroup, Textarea, useToast } from "@chakra-ui/react";
 import Modal from "../modal/index";
 import { useState } from "react";
 import { Star } from "lucide-react";
 import PropTypes from "prop-types";
 import { useMutation, useQueryClient } from "react-query";
 import { createReview } from "../../services/review";
+import { useForm } from "react-hook-form";
 
-const CreateReviewModal = ({ isOpen, onClose, tourId }) => {
+const CreateReviewModal = ({ isOpen, onClose, tourId, reviews }) => {
+  const toast = useToast();
   const queryClient = useQueryClient();
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(reviews?.rating || 0);
+
+  let title = "Create Review";
+
+  console.log("reviews", reviews);
+
+  const { handleSubmit, register } = useForm({
+    defaultValues: {
+      review: reviews?.review,
+      title: "Update Review",
+    },
+  });
 
   const { mutate, isLoading } = useMutation(createReview, {
     onSuccess: () => {
       queryClient.invalidateQueries("tour");
       setRating(0);
-      setReview("");
+      onClose();
+    },
+    onError: () => {
+      toast({
+        title: "Please, login to create review",
+        status: "error",
+        isClosable: true,
+      });
       onClose();
     },
   });
@@ -24,23 +43,17 @@ const CreateReviewModal = ({ isOpen, onClose, tourId }) => {
     setRating(value);
   };
 
-  const handleSubmit = () => {
-    const data = {
+  const onsubmit = (data) => {
+    const formattedData = {
       rating,
-      review,
+      review: data.review,
     };
-
-    mutate({ tourId, data });
+    mutate({ tourId, data: formattedData });
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Create Review"
-      isLoading={false}
-    >
-      <form className="space-y-2">
+    <Modal isOpen={isOpen} onClose={onClose} title={title} isLoading={false}>
+      <form onSubmit={handleSubmit(onsubmit)} className="space-y-2">
         <p className="flex w-full justify-center cursor-pointer">
           {Array(5)
             .fill("")
@@ -56,18 +69,17 @@ const CreateReviewModal = ({ isOpen, onClose, tourId }) => {
         </p>
         <Textarea
           placeholder="Share your experience with us"
-          onChange={(e) => setReview(e.target.value)}
-          value={review}
+          {...register("review", { required: true })}
         />
 
-        <ButtonGroup size="sm" className="flex justify-end">
+        <ButtonGroup size="sm" justifyContent={"right"}>
           <Button
             isLoading={isLoading}
             loadingText="Submitting..."
             rounded={"full"}
             className="w-full "
             colorScheme="teal"
-            onClick={handleSubmit}
+            type="submit"
           >
             Submit
           </Button>
@@ -84,6 +96,7 @@ CreateReviewModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   tourId: PropTypes.string.isRequired,
+  reviews: PropTypes.object,
 };
 
 export default CreateReviewModal;

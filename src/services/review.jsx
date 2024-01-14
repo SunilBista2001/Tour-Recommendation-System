@@ -14,7 +14,7 @@ export const updateReview = async (id, data) => {
   return response.data;
 };
 
-export const deleteReview = async (id) => {
+export const deleteReview = async ({ id }) => {
   const response = await AxiosService.delete(`api/v1/reviews/${id}`);
   return response.data;
 };
