@@ -1,5 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import {
+  Button,
+  Input,
+  InputGroup,
+  InputRightElement,
+  useToast,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
@@ -7,6 +13,7 @@ import { useMutation } from "react-query";
 import { loginUser } from "../../services/auth";
 
 const LoginForm = ({ handleFormType, onClose }) => {
+  const toast = useToast();
   const [show, setShow] = useState(false);
 
   const {
@@ -19,6 +26,13 @@ const LoginForm = ({ handleFormType, onClose }) => {
     onSuccess: () => {
       window.location.reload();
       onClose();
+    },
+    onError: () => {
+      toast({
+        title: "Please, check your email and password!",
+        status: "error",
+        isClosable: true,
+      });
     },
   });
 

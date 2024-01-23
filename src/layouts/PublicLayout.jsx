@@ -6,12 +6,17 @@ import { login } from "../redux/userSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import Loader from "../components/loader/Loader";
+import AdminLayout from "./AdminLayout";
 
 const PublicLayout = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
 
-  const { refetch, isLoading } = useQuery("me", getMe, {
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useQuery("me", getMe, {
     retry: false,
     enabled: false,
     onSuccess: (data) => {
@@ -29,12 +34,14 @@ const PublicLayout = () => {
     }
   }, [refetch, token]);
 
+  console.log("user", user);
+
   if (isLoading) return <Loader />;
 
   return (
     <>
       <Navbar />
-      <Outlet />
+      {user?.data?.user?.role === "admin" ? <AdminLayout /> : <Outlet />}
     </>
   );
 };

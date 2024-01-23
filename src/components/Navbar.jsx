@@ -2,6 +2,7 @@ import {
   Avatar,
   AvatarBadge,
   Button,
+  Image,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LoginRegisterModal from "./loginRegisterModal/LoginRegisterModal";
 import { Link, useNavigate } from "react-router-dom";
+import LargeLogo from "../assets/logo/1.png";
 
 const Navbar = () => {
   //
@@ -85,7 +87,13 @@ const Navbar = () => {
 
       <div className="flex max-w-7xl mx-auto justify-between items-center px-4 sm:px-6 md:px-2 lg:px-0 h-[80px]">
         <Link to="/">
-          <h1 className="italic font-bold text-2xl">Tripo</h1>
+          {/* <h1 className="italic font-bold text-2xl">Tripo</h1>
+           */}
+          <Image
+            src={LargeLogo}
+            alt="logo"
+            className="max-w-max h-56 object-cover "
+          />
         </Link>
 
         <ul className="md:flex hidden gap-x-8 items-center">

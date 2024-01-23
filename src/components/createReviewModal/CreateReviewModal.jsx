@@ -31,7 +31,7 @@ const CreateReviewModal = ({ isOpen, onClose, tourId, reviews }) => {
     },
     onError: () => {
       toast({
-        title: "Please, login to create review",
+        title: "Please, login to create review!",
         status: "error",
         isClosable: true,
       });
