@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import Loader from "../components/loader/Loader";
 import AdminLayout from "./AdminLayout";
+import Footer from "../components/Footer";
 
 const PublicLayout = () => {
   const dispatch = useDispatch();
@@ -34,14 +35,14 @@ const PublicLayout = () => {
     }
   }, [refetch, token]);
 
-  console.log("user", user);
-
   if (isLoading) return <Loader />;
 
   return (
     <>
       <Navbar />
       {user?.data?.user?.role === "admin" ? <AdminLayout /> : <Outlet />}
+
+      {<Footer />}
     </>
   );
 };

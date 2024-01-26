@@ -11,7 +11,7 @@ import {
 import { Edit, Trash } from "lucide-react";
 import PropTypes from "prop-types";
 
-const TourTable = ({ tours }) => {
+const TourTable = ({ tours, handleActionBtn }) => {
   return (
     <TableContainer>
       <Table variant="striped" colorScheme="teal">
@@ -36,17 +36,33 @@ const TourTable = ({ tours }) => {
           {tours.map((tour) => (
             <Tr key={tour?.id}>
               <Td>{tour.name}</Td>
-              <Td className="truncate">{tour.description}</Td>
+              <Td style={{ maxWidth: "300px" }} className="truncate">
+                {tour.description}
+              </Td>
               <Td>{tour.city}</Td>
-              <Td>{tour.coverImages ? "Yes" : "No"}</Td>
+              <Td>{tour.coverImage ? "Yes" : "No"}</Td>
               <Td>{tour.duration}</Td>
               <Td>{tour.difficulty}</Td>
               <Td>{tour.maxGroupSize}</Td>
-              <Td>{tour.images > 2 ? "Yes" : "No"}</Td>
+              <Td>
+                {tour.images.length !== 0
+                  ? `${tour.images.length} Images`
+                  : `0 Image`}
+              </Td>
               <Td isNumeric>{tour.price}</Td>
               <Td className="flex items-center gap-x-4">
-                <Edit width={14} color="black" cursor={"pointer"} />
-                <Trash width={14} color="red" cursor={"pointer"} />
+                <Edit
+                  width={14}
+                  color="black"
+                  cursor={"pointer"}
+                  onClick={() => handleActionBtn("edit", tour)}
+                />
+                <Trash
+                  width={14}
+                  color="red"
+                  cursor={"pointer"}
+                  onClick={() => handleActionBtn("delete", tour?.id)}
+                />
               </Td>
             </Tr>
           ))}
@@ -58,6 +74,7 @@ const TourTable = ({ tours }) => {
 
 TourTable.propTypes = {
   tours: PropTypes.array,
+  handleActionBtn: PropTypes.func,
 };
 
 export default TourTable;

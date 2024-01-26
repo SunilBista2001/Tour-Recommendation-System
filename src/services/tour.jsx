@@ -6,7 +6,11 @@ export const getTourByCollaborativeAlgorithm = async () => {
 };
 
 export const createTour = async (data) => {
-  const response = await AxiosService.post("api/v1/tour", data);
+  const response = await AxiosService.post("api/v1/tour", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 
@@ -20,7 +24,7 @@ export const getTour = async ({ id }) => {
   return response.data;
 };
 
-export const updateTour = async (id, data) => {
+export const updateTour = async ({ id, data }) => {
   const response = await AxiosService.patch(`api/v1/tour/${id}`, data);
   return response.data;
 };

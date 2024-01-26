@@ -6,15 +6,16 @@ import PropTypes from "prop-types";
 import { useMutation, useQueryClient } from "react-query";
 import { createReview } from "../../services/review";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 
 const CreateReviewModal = ({ isOpen, onClose, tourId, reviews }) => {
   const toast = useToast();
+
+  const user = useSelector((state) => state.user.user);
   const queryClient = useQueryClient();
   const [rating, setRating] = useState(reviews?.rating || 0);
 
   let title = "Create Review";
-
-  console.log("reviews", reviews);
 
   const { handleSubmit, register } = useForm({
     defaultValues: {
@@ -30,11 +31,17 @@ const CreateReviewModal = ({ isOpen, onClose, tourId, reviews }) => {
       onClose();
     },
     onError: () => {
-      toast({
-        title: "Please, login to create review!",
-        status: "error",
-        isClosable: true,
-      });
+      user
+        ? toast({
+            title: "You already reviewed this tour",
+            status: "error",
+            isClosable: true,
+          })
+        : toast({
+            title: "Please, login to create review!",
+            status: "error",
+            isClosable: true,
+          });
       onClose();
     },
   });

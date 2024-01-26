@@ -12,7 +12,6 @@ import {
 import { useParams } from "react-router-dom";
 import BannerImg from "../../assets/img/mount.webp";
 import {
-  Edit,
   Gauge,
   IndianRupeeIcon,
   LanguagesIcon,
@@ -61,8 +60,6 @@ const Tour = () => {
     onClose: onCloseDeleteModal,
   } = useDisclosure();
 
-  console.log("user", user);
-
   const { data: tour, isLoading } = useQuery("tour", () =>
     getTour({ id: tourId })
   );
@@ -106,7 +103,13 @@ const Tour = () => {
         </div>
       </div>
       <Image
-        src={BannerImg}
+        src={
+          tour?.data?.tour?.coverImage
+            ? import.meta.env.VITE_REACT_APP_BASE_URL +
+              "/tours/" +
+              tour?.data?.tour?.coverImage
+            : BannerImg
+        }
         alt="banner"
         className="w-full object-cover h-[70vh] brightness-95 my-8"
       />
@@ -152,21 +155,14 @@ const Tour = () => {
           </h1>
 
           <div className="grid grid-cols-3 gap-x-10 my-6">
-            <Image
-              src={BannerImg}
-              alt="banner"
-              className="rounded-md hover:scale-105 duration-700 transition-all cursor-pointer"
-            />
-            <Image
-              src={BannerImg}
-              alt="banner"
-              className="rounded-md hover:scale-105 duration-700 transition-all cursor-pointer"
-            />
-            <Image
-              src={BannerImg}
-              alt="banner"
-              className="rounded-md hover:scale-105 duration-700 transition-all cursor-pointer"
-            />
+            {tour?.data?.tour?.images?.map((img, idx) => (
+              <Image
+                key={idx}
+                src={import.meta.env.VITE_REACT_APP_BASE_URL + "/tours/" + img}
+                alt="banner"
+                className="rounded-md hover:scale-105 duration-700 transition-all cursor-pointer"
+              />
+            ))}
           </div>
         </div>
 
@@ -265,15 +261,6 @@ const Tour = () => {
                 {/* Show the Delete and Update Icon only if the respective user is logged in */}
                 {user?.data?.user?.id === review?.user?.id && (
                   <div className="flex items-center gap-x-3">
-                    <Edit
-                      size={20}
-                      className="text-gray-400 cursor-pointer"
-                      color="teal"
-                      onClick={() => {
-                        setEditReviews(review);
-                        onOpen();
-                      }}
-                    />
                     <Trash
                       size={20}
                       className="text-gray-400 cursor-pointer"

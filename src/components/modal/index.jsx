@@ -25,7 +25,7 @@ CustomModal.propTypes = {
   children: PropTypes.node.isRequired,
   onClose: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
 
 export default CustomModal;
