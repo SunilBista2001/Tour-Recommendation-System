@@ -19,7 +19,7 @@ const AddTour = ({ isOpen, onClose }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const { register, handleSubmit } = useForm();
-  const [coverImage, setCoverImage] = useState({});
+  const [coverImage, setCoverImage] = useState(null);
   const [images, setImages] = useState([]);
   const [buildImages, setBuildImages] = useState([]);
 
@@ -68,14 +68,14 @@ const AddTour = ({ isOpen, onClose }) => {
     formData.append("duration", data.duration);
     formData.append("maxGroupSize", data.maxGroupSize);
 
-    if (coverImage) {
-      formData.append("coverImage", coverImage);
-    }
-
     if (images) {
       images.forEach((img) => {
         formData.append("images", img);
       });
+    }
+
+    if (coverImage) {
+      formData.append("coverImage", coverImage);
     }
 
     mutate(formData);
@@ -146,8 +146,7 @@ const AddTour = ({ isOpen, onClose }) => {
           placeholder="Tour Image"
           name="coverImage"
           onChange={(e) => {
-            const file = e.target.files[0];
-            if (file) setCoverImage(file);
+            setCoverImage(e.target.files[0]);
           }}
         />
 

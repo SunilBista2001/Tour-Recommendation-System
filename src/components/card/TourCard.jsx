@@ -23,7 +23,7 @@ function TourCard({ tour }) {
               : img
           }
           alt="img"
-          className="hover:scale-105 object-cover duration-500 ease-out"
+          className="hover:scale-105 object-cover duration-500 ease-out overflow-hidden"
         />
         <Box p="5">
           <div className="flex items-center gap-x-2 text-sm text-gray-600 font-normal -ml-2">

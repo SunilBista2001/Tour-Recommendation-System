@@ -103,8 +103,12 @@ const Navbar = () => {
           >
             Home
           </li>
-          <li className="hover:text-teal-400 cursor-pointer">Popular Tours</li>
-          <li className="hover:text-teal-400 cursor-pointer">About Us</li>
+          <li
+            className="hover:text-teal-400 cursor-pointer"
+            onClick={() => navigate("/about-us")}
+          >
+            About Us
+          </li>
         </ul>
 
         <Avatar

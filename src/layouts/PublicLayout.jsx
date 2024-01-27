@@ -38,12 +38,12 @@ const PublicLayout = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <>
+    <div className="relative">
       <Navbar />
       {user?.data?.user?.role === "admin" ? <AdminLayout /> : <Outlet />}
 
-      {<Footer />}
-    </>
+      <Footer />
+    </div>
   );
 };
 
